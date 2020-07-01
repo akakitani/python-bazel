@@ -1,0 +1,11 @@
+**/.DS_STORE
+**/*.iml
+**/*.idea/
+**/*.pyc
+
+
+bazel-python-bazel
+bazel-bin
+bazel-genfiles
+bazel-out
+bazel-testlogs

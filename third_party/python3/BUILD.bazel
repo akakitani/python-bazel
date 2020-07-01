@@ -1,0 +1,41 @@
+package(default_visibility = ["//visibility:public"])
+
+# See https://github.com/bazelbuild/rules_foreign_cc
+load("@rules_foreign_cc//tools/build_defs:configure.bzl", "configure_make")
+
+config_setting(
+    name = "darwin_build",
+    values = {"cpu": "darwin"},
+)
+
+configure_make(
+    name = "python3",
+    binaries = [
+        "easy_install-3.7",
+        "pip3",
+        "python3",
+    ],
+    configure_options = [
+      "--with-openssl=$EXT_BUILD_DEPS/openssl/",
+      # See: https://github.com/bazelbuild/rules_foreign_cc/pull/362
+      "CFLAGS='-Dredacted=\"redacted\"'",
+    ],
+    lib_source = "@python_interpreter_src//:files",
+    visibility = ["//visibility:public"],
+    configure_env_vars = select({
+        ":darwin_build": {
+            # See: https://github.com/bazelbuild/rules_foreign_cc/issues/338 - not sure why this works...
+            "AR": "",
+        },
+        "//conditions:default": {}},
+    ),
+    deps = [
+        "//third_party/openssl:openssl"
+    ],
+)
+
+filegroup(
+    name = "python3_filegroup",
+    srcs = ["//third_party/python3:python3"],
+    output_group = "python3",
+)
