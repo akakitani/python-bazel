@@ -39,3 +39,10 @@ filegroup(
     srcs = ["//third_party/python3:python3"],
     output_group = "python3",
 )
+
+genrule(
+    name = "python3_filegroup_location",
+    srcs = [":python3_filegroup"],
+    outs = ["python3_filegroup_location.txt"],
+    cmd = "echo $(execpath :python3_filegroup) > \"$@\"",
+)
